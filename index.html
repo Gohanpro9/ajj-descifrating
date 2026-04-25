@@ -1,148 +1,122 @@
-<script src="App.js"></script>
-
-<link rel="manifest" href="manifest.json">
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ajj-descifrating</title>
-    <style>
-        body {
-            font-family: sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            background-color: rgb(10, 10, 10);
-        }
-        .container {
-            background: linear-gradient(to bottom, rgb(165, 165, 165), rgb(60, 60, 60));
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            width: 100%;
-            max-width: 500px;
-        }
-        h1 { font-size: 1.5rem; color: #333; margin-bottom: 1rem; }
-        label { display: block; margin-bottom: 0.5rem; font-weight: bold; }
-        select, textarea, button {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 1rem;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        textarea { height: 100px; resize: none; }
-        button {
-            background-color: rgb(40, 40, 40);
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        button:hover { background-color: #0056b3; }
-        .result {
-            padding: 10px;
-            background: #e9ecef;
-            border-radius: 4px;
-            word-wrap: break-word;
-            white-space: pre-wrap;
-            min-height: 50px;
-        }
-        .extra-note {
-            font-size: 0.75rem;
-            color: rgb(255, 255, 255);
-            margin-top: -0.5rem;
-            margin-bottom: 1rem;
-            font-style: italic;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ajj-descifrating</title>
 
-        .version {
-            font-size: 16px;
-            color: rgb(255, 255, 255);
-            margin-top: 0px;
-            margin-bottom: 0.5px;
-            font-style: italic;
-        }
-    </style>
+<link rel="manifest" href="manifest.json">
+<script src="App.js"></script>
+
+<style>
+body{
+    font-family:sans-serif;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    margin:0;
+    background:rgb(10,10,10);
+}
+
+.container{
+    background:linear-gradient(to bottom,rgb(165,165,165),rgb(60,60,60));
+    padding:2rem;
+    border-radius:8px;
+    width:100%;
+    max-width:500px;
+}
+
+h1{font-size:1.5rem;color:#333;margin-bottom:1rem;}
+label{display:block;margin-bottom:.5rem;font-weight:bold;}
+
+select,textarea,button{
+    width:100%;
+    padding:10px;
+    margin-bottom:1rem;
+    border:1px solid #ccc;
+    border-radius:4px;
+    box-sizing:border-box;
+}
+
+textarea{height:100px;resize:none;}
+
+button{
+    background:rgb(40,40,40);
+    color:white;
+    border:none;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+button:hover{background:#0056b3;}
+
+.result{
+    padding:10px;
+    background:#e9ecef;
+    border-radius:4px;
+    min-height:50px;
+    white-space:pre-wrap;
+}
+
+.extra-note,.version{
+    font-size:.75rem;
+    color:white;
+    font-style:italic;
+}
+</style>
 </head>
+
 <body>
 
-
-    
 <div class="container">
-    <p class="version">V0.6</p>
-    <h1>"Encriptado Ajj" por Gohan</h1>
-    
-    <label for="action">Selecciona una acción:</label>
-    <select id="action">
-        <option value="encode">Codificar</option>
-        <option value="decode">Descifrar</option>
-    </select>
+<p class="version">V0.6</p>
+<h1>Encriptado Ajj</h1>
 
-    <label for="message">Mensaje:</label>
-    <textarea id="message" placeholder="Escribe tu mensaje aquí..."></textarea>
+<label>Acción</label>
+<select id="action">
+<option value="encode">Codificar</option>
+<option value="decode">Descifrar</option>
+</select>
 
-    <p class="extra-note">* La letra ñ corresponde al símbolo ¡ (es un extra que no sigue el orden del teclado).</p>
-    
-    <button onclick="process()">Procesar Mensaje</button>
+<label>Mensaje</label>
+<textarea id="message"></textarea>
 
-    <label>Resultado:</label>
-    <div id="result" class="result">El resultado aparecerá aquí...</div>
+<p class="extra-note">ñ = ¡ (extra)</p>
+
+<button onclick="process()">Procesar</button>
+
+<label>Resultado</label>
+<div id="result" class="result">...</div>
 </div>
 
 <script>
-    // Tabla de correspondencia exacta proporcionada + extra de la ñ
-    const charMap = {
-        'q': '1', 'w': '2', 'e': '3', 'r': '4', 't': '5', 'y': '6', 'u': '7', 'i': '8', 'o': '9', 'p': '0',
-        'a': '@', 's': '#', 'd': '$', 'f': '_', 'g': '&', 'h': '-', 'j': '+', 'k': '(', 'l': ')',
-        'z': '*', 'x': '"', 'c': "'", 'v': ':', 'b': ';', 'n': '!', 'm': '?',
-        'ñ': '¡'
-    };
+const map={
+q:'1',w:'2',e:'3',r:'4',t:'5',y:'6',u:'7',i:'8',o:'9',p:'0',
+a:'@',s:'#',d:'$',f:'_',g:'&',h:'-',j:'+',k:'(',l:')',
+z:'*',x:'"',c:"'",v:':',b:';',n:'!',m:'?','ñ':'¡'
+};
 
-    // Crear el mapa inverso para descifrar
-    const reverseMap = {};
-    for (const key in charMap) {
-        reverseMap[charMap[key]] = key;
-    }
+const reverse={};
+for(let k in map) reverse[map[k]]=k;
 
-    function process() {
-        const action = document.getElementById('action').value;
-        const input = document.getElementById('message').value;
-        const resultDiv = document.getElementById('result');
-        let output = "";
+function process(){
+let a=document.getElementById('action').value;
+let i=document.getElementById('message').value;
+let out="";
 
-        if (action === "encode") {
-            // Codificar
-            for (let char of input) {
-                let lowerChar = char.toLowerCase();
-                if (charMap[lowerChar]) {
-                    output += charMap[lowerChar];
-                } else {
-                    output += char; // Mantiene espacios y otros caracteres
-                }
-            }
-        } else {
-            // Descifrar
-            for (let char of input) {
-                if (reverseMap[char]) {
-                    output += reverseMap[char];
-                } else {
-                    output += char;
-                }
-            }
-        }
+for(let c of i){
+let l=c.toLowerCase();
+if(a=="encode"){
+out+=map[l]||c;
+}else{
+out+=reverse[c]||c;
+}
+}
 
-        resultDiv.textContent = output;
-    }
+document.getElementById('result').textContent=out;
+}
 </script>
 
-
-    
 </body>
 </html>
-
